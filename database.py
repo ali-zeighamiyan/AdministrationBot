@@ -76,7 +76,11 @@ class DataBaseFetch:
             self.cursor.execute(query, (worker, ))
         else:
             self.cursor.execute(query)
-        return self.cursor.fetchall()
+        res = self.cursor.fetchall()
+        if worker:
+            res = [role[0] for role in res]
+        return res
+
     
     def delete_role_from_worker(self, worker_name, role_name):
         self.cursor.execute('SELECT worker_name, role_name FROM worker_roles WHERE worker_name = ? AND role_name = ?', (worker_name, role_name))
