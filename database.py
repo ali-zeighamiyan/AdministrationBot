@@ -8,7 +8,8 @@ class DataBaseFetch:
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS workers (
                 worker_username TEXT,
-                worker_name TEXT PRIMARY KEY
+                worker_name TEXT PRIMARY KEY,
+                worker_tel_id INTEGER
             )
         ''')
 
@@ -37,7 +38,7 @@ class DataBaseFetch:
         self.conn.commit()
 
     def get_workers(self):
-        self.cursor.execute('SELECT worker_name, worker_username FROM workers')
+        self.cursor.execute('SELECT worker_name, worker_username, worker_tel_id FROM workers')
         workers = self.cursor.fetchall()
         return workers
 
@@ -96,4 +97,22 @@ class DataBaseFetch:
         self.cursor.execute('DELETE FROM workers WHERE worker_name = ?', (worker_name, ))
         self.conn.commit()
         print(f"worker: {worker_name} Removed!")
+    
+    def update_tel_id(self, username, new_tel_id):
+        # SQL command to update the tel_id
+        sql_update_query = '''UPDATE workers SET worker_tel_id = ? WHERE worker_username = ?'''
+        
+        # Execute the command
+        self.cursor.execute(sql_update_query, (new_tel_id, username))
+        
+        # Commit the changes to the database
+        self.conn.commit()
+        print(f"Updated tel_id for {username} to {new_tel_id}")
+
+
+    def get_tel_id(self, worker_name):
+        self.cursor.execute('SELECT worker_tel_id FROM workers WHERE worker_name = ?', (worker_name,))
+        tel_id = self.cursor.fetchone()
+        return tel_id[0]
+
 
